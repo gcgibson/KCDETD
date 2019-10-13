@@ -1,0 +1,12 @@
+Package: KCDETD
+Type: Package
+Title: Non-parametric estimation of infectious disease
+Version: 0.1.0
+Author: Graham Gibson
+Description: Kernel Conditional Density Estimate of time series of infectious disease
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Imports:
+    np,
+    quantmod

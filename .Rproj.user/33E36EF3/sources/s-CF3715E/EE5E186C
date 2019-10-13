@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570985143366.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "EE5E186C",
+    "lastKnownWriteTime" : 1570992732,
+    "last_content_update" : 1570992732466,
+    "path" : "~/KCDETD/R/prediction_with_backfill.R",
+    "project_path" : "R/prediction_with_backfill.R",
+    "properties" : {
+        "cursorPosition" : "31,13",
+        "scrollLine" : "27",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

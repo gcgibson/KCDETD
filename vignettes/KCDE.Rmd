@@ -1,0 +1,89 @@
+---
+title: "KCDE"
+author: "Graham Casey Gibson"
+date: "10/7/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here we show an example of the KCDE (Kernel Conditional Density Estimation) method applied to the Massachusetts influenza like illness data submitted to the CDC.
+
+
+```{r,echo=TRUE,message=FALSE,results='hide'}
+library(KCDETD)
+library(sarimaTD)
+library(ggplot2)
+library(devtools)
+install_github("https://github.com/reichlab/cdcfluutils")
+state_data <-read.csv("../data/state_data.csv")
+
+source("../R/estimation.R")
+source("../R/prediction.R")
+
+test_regions <- unique(state_data$region)
+nsim <- 1000
+
+ls_index <- 1
+ls_sarima <- matrix(NA,nrow=1000,ncol=4)
+ls_kcde <- matrix(NA,nrow=1000,ncol=4)
+
+
+for (region in sample(test_regions[test_regions!="Florida"],5)){
+  ma_data <- state_data[state_data$region==region, ]
+  
+  
+  p <- ggplot(data=ma_data,aes(x=ma_data$week_start,y=ma_data$unweighted_ili,group=1)) + geom_line()
+  print(p)
+  
+  first_test_index <- which(ma_data$week_start == "2017-10-02")
+  
+  
+  kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],ma_data$season_week[1:(first_test_index-1)],52,h=4)
+  
+  sarima_td_fit <- fit_sarima(y=ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency=52,transformation = "none",seasonal_difference = FALSE)
+  
+  
+  
+
+  
+  for (i in first_test_index:(first_test_index+10)){
+    kcde_preds <- simulate(kcde_fit,newX = ma_data$unweighted_ili[1:i],newt=ma_data$season_week[1:i],nsim=nsim,h=4)
+    sarima_preds <- simulate(sarima_td_fit,newdata = ma_data$unweighted_ili[1:i],nsim=nsim,h=4)
+    
+    p_kcde <- ggplot(data=data.frame(y=c(t(cbind(matrix(rep(ma_data$unweighted_ili[(i-20):i],nsim),byrow=T,nrow=nsim),kcde_preds))),
+                           x=rep((i-20):(i+4),nsim),
+                           group = rep(1:nsim,each=21 + 4)),aes(x=x,y=y,group=group)) + geom_line(alpha=.1) + geom_line(data=data.frame(y=ma_data$unweighted_ili[(i+1):(i+4)],x=(i+1):(i+4),group=1),aes(x=x,y=y,group=group,col="truth"))
+    
+    p_sarima <- ggplot(data=data.frame(y=c(t(cbind(matrix(rep(ma_data$unweighted_ili[(i-20):i],nsim),byrow=T,nrow=nsim),sarima_preds))),
+                           x=rep((i-20):(i+4),nsim),
+                           group = rep(1:nsim,each=21+4)),aes(x=x,y=y,group=group)) + geom_line(alpha=.1)+ geom_line(data=data.frame(y=ma_data$unweighted_ili[(i+1):(i+4)],x=(i+1):(i+4),group=1),aes(x=x,y=y,group=group,col="truth"))
+  library(cowplot)
+  p <- cowplot::plot_grid(p_sarima,p_kcde,labels = c("Sarima","KCDE"))    
+ # ggsave(paste0("../forecast_plots/comparison_plot_",i),p,device="png")
+    for (j in 1:4){
+      ls_kcde[ls_index,j] <- sum(round(kcde_preds[,j],1) == round(ma_data$unweighted_ili[i+j],1))/nsim
+      ls_sarima[ls_index,j] <- sum(round(sarima_preds[,j],1) == round(ma_data$unweighted_ili[i+j],1)) /nsim
+    }
+    ls_index <- ls_index+1
+  }
+  
+  mean(ls_kcde,na.rm=T)
+  mean(ls_sarima,na.rm=T)
+}
+
+```
+```{r}
+mean(ls_kcde,na.rm=T)
+mean(ls_sarima,na.rm=T)
+
+colMeans(ls_kcde,na.rm=T)
+colMeans(ls_sarima,na.rm=T)
+
+library(ggplot2)
+ggplot(data=data.frame(y=c(colMeans(ls_kcde,na.rm=T),colMeans(ls_sarima,na.rm=T)),x=rep(1:4,2),method=c(rep("KCDE",4),rep("Sarima",4))),aes(x=x,y=y,color=method))+ geom_point()
+```
+
+

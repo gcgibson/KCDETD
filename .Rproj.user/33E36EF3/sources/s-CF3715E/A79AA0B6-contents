@@ -1,0 +1,34 @@
+---
+title: "KCDE_with_backfill"
+author: "Graham Casey Gibson"
+date: "10/13/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(devtools)
+library(dplyr)
+devtools::install_github("https://github.com/reichlab/cdcfluutils",force = T)
+library(KCDETD)
+state_data <-read.csv("../data/state_data.csv")
+ma_data <- state_data[state_data$region == "Massachusetts",]
+
+first_test_index <- 100
+
+kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],ma_data$season_week[1:(first_test_index-1)],52,h=4)
+
+flu_data_with_backfill <- cdcfluutils::flu_data_with_backfill
+preds <- KCDETD::simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
+                                        h=4,
+                                        epiweek = ma_data$season_week[first_test_index-1],
+                                        season=ma_data$season[first_test_index-1],region="Massachusetts")
+                                      
+
+
+
+```
