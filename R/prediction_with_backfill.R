@@ -35,8 +35,12 @@ simulate_with_backfill <- function(
     time_in <- 12 + epiweek
   }
   print (time_in)
-  backfill_sim <-cdcfluutils::rRevisedILI(n = nsim,observed_inc = tail(newX,time_in),region = region,epiweek_idx = epiweek,season = season,add_nowcast = FALSE)
-  return (cbind(backfill_sim,kcde_preds))
+  backfill_sim <-cdcfluutils::rRevisedILI(n = nsim,observed_inc = tail(newX,time_in),region = region,epiweek_idx = epiweek,season = season,add_nowcast = TRUE)
+  print (dim(backfill_sim))
+  return (cbind(backfill_sim[,1:(ncol(backfill_sim-2))],
+                .5*backfill_sim[,ncol(backfill_sim)-1] + .5*kcde_preds[,ncol(kcde_preds)-1],
+                .5*backfill_sim[,ncol(backfill_sim)] + .5*kcde_preds[,ncol(kcde_preds)],
+                kcde_preds[,3:ncol(kcde_preds)]))
 
 
 }

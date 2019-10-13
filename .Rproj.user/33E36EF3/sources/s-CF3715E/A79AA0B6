@@ -7,17 +7,17 @@
     "folds" : "",
     "hash" : "0",
     "id" : "A79AA0B6",
-    "lastKnownWriteTime" : 1570992231,
-    "last_content_update" : 1570992231761,
+    "lastKnownWriteTime" : 1571003062,
+    "last_content_update" : 1571003062215,
     "path" : "~/KCDETD/vignettes/KCDE_w_backfill.Rmd",
     "project_path" : "vignettes/KCDE_w_backfill.Rmd",
     "properties" : {
-        "cursorPosition" : "25,144",
-        "last_setup_crc32" : "",
-        "scrollLine" : "21",
+        "cursorPosition" : "33,0",
+        "last_setup_crc32" : "CF3715Ebb338d19",
+        "scrollLine" : "28",
         "tempName" : "Untitled1"
     },
-    "relative_order" : 5,
+    "relative_order" : 3,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_markdown"

@@ -21,3 +21,124 @@ To https://github.com/gcgibson/KCDETD.git
  * [new branch]      master -> master
 Branch 'master' set up to track remote branch 'master' from 'origin'.
 ]0;~/KCDETD(base) gcgibsons-MacBook-Pro:KCDETD gcgibson$ p[Kgit add -A
+]0;~/KCDETD(base) gcgibsons-MacBook-Pro:KCDETD gcgibson$ git add -Apush -u origin masterremote add origin https://github.coom/gcgibson/KCDETD.git[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Ppush -u origin master
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcommit -m "prediction with backfil l working"
+[master 111b714] prediction with backfill working
+ 74 files changed, 22829 insertions(+)
+ create mode 100644 .Rbuildignore
+ create mode 100644 .Rproj.user/33E36EF3/console06/26DFACF0
+ create mode 100644 .Rproj.user/33E36EF3/console06/26DFACF0.env
+ create mode 100644 .Rproj.user/33E36EF3/console06/INDEX001
+ create mode 100644 .Rproj.user/33E36EF3/cpp-definition-cache
+ create mode 100644 .Rproj.user/33E36EF3/pcs/files-pane.pper
+ create mode 100644 .Rproj.user/33E36EF3/pcs/source-pane.pper
+ create mode 100644 .Rproj.user/33E36EF3/pcs/windowlayoutstate.pper
+ create mode 100644 .Rproj.user/33E36EF3/pcs/workbench-pane.pper
+ create mode 100644 .Rproj.user/33E36EF3/persistent-state
+ create mode 100644 .Rproj.user/33E36EF3/rmd-outputs
+ create mode 100644 .Rproj.user/33E36EF3/saved_source_markers
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/1F723947
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/7672AB0F
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/8049979E
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/9EDC349
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/B3C1F863
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/D0F2835A
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/EF8BEE7A
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/FDAFBEFE
+ create mode 100644 .Rproj.user/33E36EF3/sources/prop/INDEX
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/3857A481
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/3857A481-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/8C366C97
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/8C366C97-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/96F3A598-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A34DBBC
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A34DBBC-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A664AEFC-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A6B01D89-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A79AA0B6
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/A79AA0B6-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/AAE4F5C3
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/AAE4F5C3-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/BA43A265-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/D5EC39CE-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/EE5E186C
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/EE5E186C-contents
+ create mode 100644 .Rproj.user/33E36EF3/sources/s-CF3715E/lock_file
+ create mode 100644 .Rproj.user/33E36EF3/viewer-cache/C95F3587.Rdata
+ create mode 100644 .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/33E36EF3CF3715E/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/csetup_chunk/000002.csv
+ create mode 100644 .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/cy6k300isbgr5/000018.csv
+ create mode 100644 .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/cy6k300isbgr5/000019.error
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/33E36EF3CF3715E/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cb79z10cahawa/000006.csv
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/csetup_chunk/000002.csv
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000c.csv
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000d.error
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000e.metadata
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000e.png
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000f.metadata
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/00000f.png
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000010.metadata
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000010.png
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000011.metadata
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000011.png
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000012.metadata
+ create mode 100644 .Rproj.user/shared/notebooks/EF7B5BEE-KCDE/1/s/cuf19sgkn4dr8/000012.png
+ create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
+ create mode 100644 .Rproj.user/shared/notebooks/paths
+ create mode 100644 DESCRIPTION
+ create mode 100644 KCDETD.Rproj
+ create mode 100644 NAMESPACE
+ create mode 100644 R/estimation.R
+ create mode 100644 R/hello.R
+ create mode 100644 R/prediction.R
+ create mode 100644 R/prediction_with_backfill.R
+ create mode 100644 data/state_data.csv
+ create mode 100644 man/hello.Rd
+ create mode 100644 vignettes/KCDE.Rmd
+ create mode 100644 vignettes/KCDE_w_backfill.Rmd
+]0;~/KCDETD(base) gcgibsons-MacBook-Pro:KCDETD gcgibson$ git push origin master
+Enumerating objects: 87, done.
+Counting objects:   1% (1/87)   Counting objects:   2% (2/87)   Counting objects:   3% (3/87)   Counting objects:   4% (4/87)   Counting objects:   5% (5/87)   Counting objects:   6% (6/87)   Counting objects:   8% (7/87)   Counting objects:   9% (8/87)   Counting objects:  10% (9/87)   Counting objects:  11% (10/87)   Counting objects:  12% (11/87)   Counting objects:  13% (12/87)   Counting objects:  14% (13/87)   Counting objects:  16% (14/87)   Counting objects:  17% (15/87)   Counting objects:  18% (16/87)   Counting objects:  19% (17/87)   Counting objects:  20% (18/87)   Counting objects:  21% (19/87)   Counting objects:  22% (20/87)   Counting objects:  24% (21/87)   Counting objects:  25% (22/87)   Counting objects:  26% (23/87)   Counting objects:  27% (24/87)   Counting objects:  28% (25/87)   Counting objects:  29% (26/87)   Counting objects:  31% (27/87)   Counting objects:  32% (28/87)   Counting objects:  33% (29/87)   Counting objects:  34% (30/87)   Counting objects:  35% (31/87)   Counting objects:  36% (32/87)   Counting objects:  37% (33/87)   Counting objects:  39% (34/87)   Counting objects:  40% (35/87)   Counting objects:  41% (36/87)   Counting objects:  42% (37/87)   Counting objects:  43% (38/87)   Counting objects:  44% (39/87)   Counting objects:  45% (40/87)   Counting objects:  47% (41/87)   Counting objects:  48% (42/87)   Counting objects:  49% (43/87)   Counting objects:  50% (44/87)   Counting objects:  51% (45/87)   Counting objects:  52% (46/87)   Counting objects:  54% (47/87)   Counting objects:  55% (48/87)   Counting objects:  56% (49/87)   Counting objects:  57% (50/87)   Counting objects:  58% (51/87)   Counting objects:  59% (52/87)   Counting objects:  60% (53/87)   Counting objects:  62% (54/87)   Counting objects:  63% (55/87)   Counting objects:  64% (56/87)   Counting objects:  65% (57/87)   Counting objects:  66% (58/87)   Counting objects:  67% (59/87)   Counting objects:  68% (60/87)   Counting objects:  70% (61/87)   Counting objects:  71% (62/87)   Counting objects:  72% (63/87)   Counting objects:  73% (64/87)   Counting objects:  74% (65/87)   Counting objects:  75% (66/87)   Counting objects:  77% (67/87)   Counting objects:  78% (68/87)   Counting objects:  79% (69/87)   Counting objects:  80% (70/87)   Counting objects:  81% (71/87)   Counting objects:  82% (72/87)   Counting objects:  83% (73/87)   Counting objects:  85% (74/87)   Counting objects:  86% (75/87)   Counting objects:  87% (76/87)   Counting objects:  88% (77/87)   Counting objects:  89% (78/87)   Counting objects:  90% (79/87)   Counting objects:  91% (80/87)   Counting objects:  93% (81/87)   Counting objects:  94% (82/87)   Counting objects:  95% (83/87)   Counting objects:  96% (84/87)   Counting objects:  97% (85/87)   Counting objects:  98% (86/87)   Counting objects: 100% (87/87)   Counting objects: 100% (87/87), done.
+Delta compression using up to 4 threads
+Compressing objects:   1% (1/68)   Compressing objects:   2% (2/68)   Compressing objects:   4% (3/68)   Compressing objects:   5% (4/68)   Compressing objects:   7% (5/68)   Compressing objects:   8% (6/68)   Compressing objects:  10% (7/68)   Compressing objects:  11% (8/68)   Compressing objects:  13% (9/68)   Compressing objects:  14% (10/68)   Compressing objects:  16% (11/68)   Compressing objects:  17% (12/68)   Compressing objects:  19% (13/68)   Compressing objects:  20% (14/68)   Compressing objects:  22% (15/68)   Compressing objects:  23% (16/68)   Compressing objects:  25% (17/68)   Compressing objects:  26% (18/68)   Compressing objects:  27% (19/68)   Compressing objects:  29% (20/68)   Compressing objects:  30% (21/68)   Compressing objects:  32% (22/68)   Compressing objects:  33% (23/68)   Compressing objects:  35% (24/68)   Compressing objects:  36% (25/68)   Compressing objects:  38% (26/68)   Compressing objects:  39% (27/68)   Compressing objects:  41% (28/68)   Compressing objects:  42% (29/68)   Compressing objects:  44% (30/68)   Compressing objects:  45% (31/68)   Compressing objects:  47% (32/68)   Compressing objects:  48% (33/68)   Compressing objects:  50% (34/68)   Compressing objects:  51% (35/68)   Compressing objects:  52% (36/68)   Compressing objects:  54% (37/68)   Compressing objects:  55% (38/68)   Compressing objects:  57% (39/68)   Compressing objects:  58% (40/68)   Compressing objects:  60% (41/68)   Compressing objects:  61% (42/68)   Compressing objects:  63% (43/68)   Compressing objects:  64% (44/68)   Compressing objects:  66% (45/68)   Compressing objects:  67% (46/68)   Compressing objects:  69% (47/68)   Compressing objects:  70% (48/68)   Compressing objects:  72% (49/68)   Compressing objects:  73% (50/68)   Compressing objects:  75% (51/68)   Compressing objects:  76% (52/68)   Compressing objects:  77% (53/68)   Compressing objects:  79% (54/68)   Compressing objects:  80% (55/68)   Compressing objects:  82% (56/68)   Compressing objects:  83% (57/68)   Compressing objects:  85% (58/68)   Compressing objects:  86% (59/68)   Compressing objects:  88% (60/68)   Compressing objects:  89% (61/68)   Compressing objects:  91% (62/68)   Compressing objects:  92% (63/68)   Compressing objects:  94% (64/68)   Compressing objects:  95% (65/68)   Compressing objects:  97% (66/68)   Compressing objects:  98% (67/68)   Compressing objects: 100% (68/68)   Compressing objects: 100% (68/68), done.
+Writing objects:   1% (1/86)   Writing objects:   2% (2/86)   Writing objects:   3% (3/86)   Writing objects:   4% (4/86)   Writing objects:   5% (5/86)   Writing objects:   6% (6/86)   Writing objects:   8% (7/86)   Writing objects:   9% (8/86)   Writing objects:  10% (9/86)   Writing objects:  11% (10/86)   Writing objects:  12% (11/86)   Writing objects:  13% (12/86)   Writing objects:  15% (13/86)   Writing objects:  16% (14/86)   Writing objects:  17% (15/86)   Writing objects:  18% (16/86)   Writing objects:  19% (17/86)   Writing objects:  20% (18/86)   Writing objects:  22% (19/86)   Writing objects:  23% (20/86)   Writing objects:  24% (21/86)   Writing objects:  25% (22/86)   Writing objects:  26% (23/86)   Writing objects:  27% (24/86)   Writing objects:  29% (25/86)   Writing objects:  30% (26/86)   Writing objects:  31% (27/86)   Writing objects:  32% (28/86)   Writing objects:  33% (29/86)   Writing objects:  34% (30/86)   Writing objects:  37% (32/86)   Writing objects:  38% (33/86)   Writing objects:  41% (36/86)   Writing objects:  44% (38/86)   Writing objects:  46% (40/86)   Writing objects:  47% (41/86)   Writing objects:  48% (42/86)   Writing objects:  50% (43/86)   Writing objects:  51% (44/86)   Writing objects:  52% (45/86)   Writing objects:  53% (46/86)   Writing objects:  54% (47/86)   Writing objects:  55% (48/86)   Writing objects:  56% (49/86)   Writing objects:  58% (50/86)   Writing objects:  59% (51/86)   Writing objects:  60% (52/86)   Writing objects:  61% (53/86)   Writing objects:  62% (54/86)   Writing objects:  65% (56/86)   Writing objects:  66% (57/86)   Writing objects:  67% (58/86)   Writing objects:  68% (59/86)   Writing objects:  69% (60/86)   Writing objects:  70% (61/86)   Writing objects:  72% (62/86)   Writing objects:  73% (63/86)   Writing objects:  74% (64/86)   Writing objects:  75% (65/86)   Writing objects:  76% (66/86)   Writing objects:  77% (67/86)   Writing objects:  79% (68/86)   Writing objects:  80% (69/86)   Writing objects:  81% (70/86)   Writing objects:  82% (71/86)   Writing objects:  83% (72/86)   Writing objects:  84% (73/86)   Writing objects:  86% (74/86)   Writing objects:  87% (75/86)   Writing objects:  88% (76/86)   Writing objects:  89% (77/86)   Writing objects:  90% (78/86)   Writing objects:  91% (79/86)   Writing objects:  93% (80/86)   Writing objects:  94% (81/86)   Writing objects:  95% (82/86)   Writing objects:  96% (83/86)   Writing objects:  97% (84/86)   Writing objects:  98% (85/86)   Writing objects: 100% (86/86)   Writing objects: 100% (86/86), 823.06 KiB | 3.71 MiB/s, done.
+Total 86 (delta 7), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/7)[Kremote: Resolving deltas:  14% (1/7)[Kremote: Resolving deltas:  42% (3/7)[Kremote: Resolving deltas:  57% (4/7)[Kremote: Resolving deltas:  71% (5/7)[Kremote: Resolving deltas: 100% (7/7)[Kremote: Resolving deltas: 100% (7/7), done.[K
+To https://github.com/gcgibson/KCDETD.git
+   ae59a36..111b714  master -> master
+]0;~/KCDETD[?1034h(base) gcgibsons-MacBook-Pro:KCDETD gcgibson$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   .Rproj.user/33E36EF3/console06/26DFACF0[m
+	[31mmodified:   .Rproj.user/33E36EF3/console06/INDEX001[m
+	[31mmodified:   .Rproj.user/33E36EF3/pcs/source-pane.pper[m
+	[31mmodified:   .Rproj.user/33E36EF3/pcs/workbench-pane.pper[m
+	[31mmodified:   .Rproj.user/33E36EF3/persistent-state[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/prop/D0F2835A[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/prop/FDAFBEFE[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/3857A481[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/A34DBBC[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/A79AA0B6[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/A79AA0B6-contents[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/EE5E186C[m
+	[31mmodified:   .Rproj.user/33E36EF3/sources/s-CF3715E/EE5E186C-contents[m
+	[31mdeleted:    .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/cy6k300isbgr5/000018.csv[m
+	[31mdeleted:    .Rproj.user/shared/notebooks/4EDC67ED-KCDE_w_backfill/1/s/cy6k300isbgr5/000019.error[m
+	[31mmodified:   R/prediction_with_backfill.R[m
+	[31mmodified:   vignettes/KCDE_w_backfill.Rmd[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31m.gitignore[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;~/KCDETD(base) gcgibsons-MacBook-Pro:KCDETD gcgibson$ git add -A

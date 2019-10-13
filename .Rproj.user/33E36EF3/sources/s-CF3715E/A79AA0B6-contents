@@ -26,7 +26,7 @@ flu_data_with_backfill <- cdcfluutils::flu_data_with_backfill
 preds <- KCDETD::simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
                                         h=4,
                                         epiweek = ma_data$season_week[first_test_index-1],
-                                        season=ma_data$season[first_test_index-1],region="Massachusetts")
+                                        season=ma_data$season[first_test_index-1],region="ma")
                                       
 
 
