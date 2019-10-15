@@ -32,3 +32,9 @@ preds <- KCDETD::simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_
 
 
 ```
+
+
+```{r}
+library(ggplot2)
+ggplot(data=data.frame(y=c(t(preds)),x=rep(1:27,1000),group=rep(1:1000,each=27)),aes(x=x,y=y,group=group)) + geom_line()
+```
