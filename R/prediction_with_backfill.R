@@ -1,3 +1,34 @@
+
+#'Compute historical variance
+#'
+
+compute_historical_variance <- function(){
+    library(dplyr)
+    state_data_with_backfill <- readRDS("../flu_data_with_backfill.rds")
+    state_data_with_backfill_max <- state_data_with_backfill %>%
+            group_by(region,epiweek) %>% filter(lag==max(lag))
+
+    regions <- unique(state_data_with_backfill$region)
+    vars <- matrix(NA,nrow=length(regions),ncol=11)
+    rgn_idx_num <- 1
+    for (rgn_idx in regions){
+      for (l in 0:10){
+        state_data_with_backfill_current_lag <- state_data_with_backfill %>%
+          group_by(region,epiweek) %>% filter(lag==l)
+
+        common_dates <- intersect(state_data_with_backfill_current_lag[state_data_with_backfill_current_lag$region == rgn_idx,]$epiweek,
+                                  state_data_with_backfill_max[state_data_with_backfill_max$region == rgn_idx,]$epiweek)
+        vars[rgn_idx_num,l] <- var(state_data_with_backfill_current_lag[state_data_with_backfill_current_lag$region == rgn_idx & state_data_with_backfill_current_lag$epiweek %in% common_dates,]$ili-state_data_with_backfill_max[state_data_with_backfill_max$region == rgn_idx & state_data_with_backfill_max$epiweek %in% common_dates,]$ili)
+      }
+      rgn_idx_num <- rgn_idx_num+1
+
+    }
+
+    return (vars)
+}
+
+
+
 #'
 #'
 #' @param object a KCDE fit of class "sarima_td", as returned by fit_sarima
@@ -24,23 +55,48 @@ simulate_with_backfill <- function(
   h = 1,
   epiweek=40,
   season=2016,
-  region="nat"
+  region="nat",
+  season_start_epiweek = 40
 )
 {
-  kcde_preds <- simulate(kcde_fit,newX = newX,newt=newt,nsim=nsim,h=h)
 
-  if (epiweek > 20){
-    time_in <- epiweek - 40 +1
+  epiweek_idx <- epiweek
+  kcde_preds <- simulate(kcde_fit,newX = newX,newt=newt,nsim=nsim,h=h)
+  if (nchar(epiweek) == 1){
+    current_season_epiweek <- paste0(substr(season,6,10),"0",epiweek)
+
   } else{
-    time_in <- 12 + epiweek
+    current_season_epiweek <- paste0(substr(season,1,4),epiweek)
+
   }
-  print (time_in)
-  backfill_sim <-cdcfluutils::rRevisedILI(n = nsim,observed_inc = tail(newX,time_in),region = region,epiweek_idx = epiweek,season = season,add_nowcast = TRUE)
-  print (dim(backfill_sim))
-  return (cbind(backfill_sim[,1:(ncol(backfill_sim-2))],
-                .5*backfill_sim[,ncol(backfill_sim)-1] + .5*kcde_preds[,ncol(kcde_preds)-1],
-                .5*backfill_sim[,ncol(backfill_sim)] + .5*kcde_preds[,ncol(kcde_preds)],
-                kcde_preds[,3:ncol(kcde_preds)]))
+
+  req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,1)))
+  nowcast_json <- jsonlite::prettify(rawToChar(req$content))
+  nowcast_obj_1_wk_ahead <- fromJSON(nowcast_json)
+  oneweek_ahead_nowcast <- nowcast_obj_1_wk_ahead$epidata$value
+
+  req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,2)))
+  nowcast_json <- jsonlite::prettify(rawToChar(req$content))
+  nowcast_obj_2_wk_ahead <- fromJSON(nowcast_json)
+  twoweek_ahead_nowcast <- nowcast_obj_2_wk_ahead$epidata$value
+
+  kcde_preds[,1] <- .5*kcde_preds[,1] + .5*oneweek_ahead_nowcast
+  kcde_preds[,2] <- .5*kcde_preds[,2] + .5*twoweek_ahead_nowcast
+
+  if (epiweek_idx <= 20){
+    time_in <- cdcfluutils::get_num_MMWR_weeks_in_first_season_year(season) - season_start_epiweek + epiweek_idx
+  } else{
+    time_in <- epiweek_idx - season_start_epiweek + 1
+  }
+
+
+  sampled_historical <- matrix(NA,nrow=nsim,ncol=time_in)
+  for (i in 1:nsim){
+    sampled_historical[i,] <- rnorm(time_in,tail(newX,time_in),.001*1:time_in)
+  }
+
+
+  return (cbind(sampled_historical,kcde_preds))
 
 
 }
