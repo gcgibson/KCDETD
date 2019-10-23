@@ -1,5 +1,5 @@
 ---
-title: "KCDE_with_backfill"
+title: "KCDE With Backfill"
 author: "Graham Casey Gibson"
 date: "10/13/2019"
 output: pdf_document
@@ -8,32 +8,95 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Here we introduce the KCDETD package for R. The KCDE method uses an estimate of the conditional distribution of a time-series given:
+- The last 4 observed points in the time series. 
+- The value observed last season. 
+- The epiweek used to forecast.
+
+
+
+```{r, message=FALSE,results='hide',echo=FALSE}
+library(devtools)
+library(dplyr)
+#devtools::install_github("https://github.com/reichlab/cdcfluutils",force = T)
+library(KCDETD)
+library(jsonlite)
+state_data <-read.csv("../data/state_data.csv")
+ma_data <- state_data[state_data$region == "Colorado",]
+
+first_test_index <- 100
+nsim <- 1000
+kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
+                     ma_data$season_week[1:(first_test_index-1)],
+                     52,
+                     h=4)
+
+preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
+                                        h=4,
+                                        epiweek = ma_data$season_week[first_test_index-1],
+                                        season=ma_data$season[first_test_index-1],region="co")
+                                      
+
+```
+
+## Data
+
+To begin we look at a classic infectious disease time series data set: influenza-like-illness as reported by the CDC in Colorado. 
+
 
 
 ```{r}
 library(devtools)
 library(dplyr)
-#devtools::install_github("https://github.com/reichlab/cdcfluutils",force = T)
 library(KCDETD)
+library(jsonlite)
+library(ggplot2)
 state_data <-read.csv("../data/state_data.csv")
-ma_data <- state_data[state_data$region == "Massachusetts",]
-
-first_test_index <- 100
-nsim <- 1000
-kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],ma_data$season_week[1:(first_test_index-1)],52,h=4)
-
-preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
-                                        h=4,
-                                        epiweek = ma_data$season_week[first_test_index-1],
-                                        season=ma_data$season[first_test_index-1],region="ma")
-                                      
-
-
-
+co_data <- state_data[state_data$region == "Colorado",]
+ggplot(co_data,aes(x=week_start,y=unweighted_ili,group=1)) + geom_line()
 ```
 
 
+We then fit the KCDE model to the available data using the `fit_kcde` method after choosing an evaluation point. 
+
+
+```{r, results='hide',echo=FALSE}
+first_test_index <- 100
+nsim <- 1000
+
+kcde_fit <- fit_kcde(co_data$unweighted_ili[1:(first_test_index-1)],co_data$season_week[1:(first_test_index-1)],52,h=4)
+```
+
+
+```{r,eval=FALSE}
+first_test_index <- 100
+nsim <- 1000
+
+kcde_fit <- fit_kcde(co_data$unweighted_ili[1:(first_test_index-1)],
+                     co_data$season_week[1:(first_test_index-1)],
+                     52,
+                     h=4)
+```
+
+
+Finally we generate predictions using the fitted model on the same data used to train the model. 
+
+```{r}
+preds <- simulate_with_backfill(kcde_fit,
+                                nsim,
+                                newX = co_data$unweighted_ili[1:(first_test_index-1)],
+                                newt = co_data$season_week[1:(first_test_index-1)],
+                                ts_frequency = 52,
+                                h=4,
+                                epiweek = co_data$season_week[first_test_index-1],
+                                season=co_data$season[first_test_index-1],
+                                region="co")
+                                      
+
+```
+
+Finally, we plot the results
 ```{r}
 library(ggplot2)
-ggplot(data=data.frame(y=c(t(preds)),x=rep(1:20,1000),group=rep(1:1000,each=20)),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[100:103,],aes(x=20-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
+ggplot(data=data.frame(y=c(t(preds)),x=rep(1:ncol(preds),1000),group=rep(1:1000,each=ncol(preds))),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[100:103,],aes(x=ncol(preds)-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
 ```
