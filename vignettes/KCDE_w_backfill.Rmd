@@ -35,6 +35,5 @@ preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(f
 
 ```{r}
 library(ggplot2)
-ggplot(data=data.frame(y=c(t(preds)),x=rep(1:20,1000),group=rep(1:1000,each=20)),aes(x=x,y=y,group=group)) + geom_line()
-ma_data$unweighted_ili[100:103]
+ggplot(data=data.frame(y=c(t(preds)),x=rep(1:20,1000),group=rep(1:1000,each=20)),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[100:103,],aes(x=20-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
 ```
