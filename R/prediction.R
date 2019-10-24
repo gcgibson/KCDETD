@@ -31,6 +31,7 @@ simulate.KCDE <- function(
 ) {
   newdata <- newX
   if(is.null(seed)) {
+    set.seed(1)
     seed <- .Random.seed
   } else {
     set.seed(seed)
@@ -79,24 +80,14 @@ simulate.KCDE <- function(
   ## that does the "right thing" with NAs if filter coefficients are 0 and then
   ## use that function in forecast:::myarima.sim
   interpolated_y <- interpolate_and_clean_missing(differenced_y)
-  X1 <- tail(c(interpolated_y),1)[1]
-  X2 <- tail(c(interpolated_y),2)[1]
-  X3 <- tail(c(interpolated_y),3)[1]
-  X4 <- tail(c(interpolated_y),4)[1]
-  X_tot <- cbind(c(X1),c(X2),c(X3),c(X4),c(tail(newt,1)[1]))
 
+  kcde_fit <- object[[1]]$nneighbors
   raw_trajectory_samples <- matrix(NA,nrow=nsim,ncol=h)
 
-  support <- seq(-100,100,by=.01)
-  for (step_ahead in 1:h){
-    kcde_fit <- fitted(npcdens(object[[step_ahead]],support,exdat=matrix(rep(X_tot,length(support)),ncol=ncol(X_tot),byrow=T)))
-    raw_trajectory_samples[,step_ahead] <- sample(support,size = nsim,prob = kcde_fit,replace = T)
+  for (h in 1:4){
+    raw_trajectory_samples[,h] <- rnorm(nsim,mean(kcde_fit[,16 - 4+ h]),1.1*var(kcde_fit[,16 - 4+ h]))
   }
 
-  ###mean resampling
-  for (step_ahead in 1:h){
-    raw_trajectory_samples[sample(1:nsim,nsim/2),step_ahead] <- mean(raw_trajectory_samples[,step_ahead])
-  }
 
   ## Sampled trajectories are of seasonally differenced transformed time series
   ## Get to trajectories for originally observed time series ("orig") by

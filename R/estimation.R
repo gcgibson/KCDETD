@@ -34,6 +34,7 @@ fit_kcde <- function(
 
   library(quantmod)
   library(np)
+  library(tsfknn)
   ## Validate arguments
   if(!(is.numeric(y) || is.ts(y))) {
     stop("The argument y must be a numeric vector or object of class 'ts'.")
@@ -67,19 +68,10 @@ fit_kcde <- function(
   } else {
     differenced_y <- ts(transformed_y, frequency = ts_frequency)
   }
-
-  ## Get KCDE fit
   kcde_fit <- list()
-  X1 <- Lag(c(differenced_y),1)
-  X2 <- Lag(c(differenced_y),2)
-  X3 <- Lag(c(differenced_y),3)
-  X4 <- Lag(c(differenced_y),4)
-  X_tot <- cbind(c(X1),c(X2),c(X3),c(X4),Lag(c(t),1))
-  X_tot_y <- cbind(X_tot,c(differenced_y))
-  for (step_ahead in 1:h){
-    kcde_fit[[step_ahead]] <- npcdensbw(x=X_tot_y[,1:5],y=X_tot_y[,6])
-  }
-
+  ## Get KCDE fit
+  pred <- knn_forecasting(differenced_y, h = 4, lags = 1:12, k = 10)
+  kcde_fit[[1]] <- nearest_neighbors(pred)
   kcde_fit$kcde_call <- match.call()
   for(param_name in c("y", "ts_frequency", "transformation", "seasonal_difference", "d", "D")) {
     kcde_fit[[paste0("KCDE_used_", param_name)]] <- get(param_name)

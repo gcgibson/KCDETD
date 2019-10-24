@@ -80,8 +80,8 @@ simulate_with_backfill <- function(
   nowcast_obj_2_wk_ahead <- fromJSON(nowcast_json)
   twoweek_ahead_nowcast <- nowcast_obj_2_wk_ahead$epidata$value
 
-  kcde_preds[,1] <- .75*kcde_preds[,1] + .25*oneweek_ahead_nowcast
-  kcde_preds[,2] <- .75*kcde_preds[,2] + .25*twoweek_ahead_nowcast
+  #kcde_preds[,1] <- .75*kcde_preds[,1] + .25*oneweek_ahead_nowcast
+ # kcde_preds[,2] <- .75*kcde_preds[,2] + .25*twoweek_ahead_nowcast
 
   if (epiweek_idx <= 20){
     time_in <- cdcfluutils::get_num_MMWR_weeks_in_first_season_year(season) - season_start_epiweek + epiweek_idx
