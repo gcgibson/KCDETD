@@ -36,7 +36,7 @@ rRevisedILI_fast <- function(
     'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy',
     'as', 'mp', 'dc', 'gu', 'pr', 'vi', 'ord', 'lax', 'jfk')) {
     flu_data_with_backfill <- cdcfluutils::state_local_flu_data_with_backfill
-    historical_vars <- readRDS("/Users/gcgibson/historical_vars_state.RDS")
+    historical_vars <- readRDS("../data/historical_vars_regional.RDS")
     regions <- c(paste0("hhs",1:10),"nat")
     region_idx <- which(regions==region)
   } else {
