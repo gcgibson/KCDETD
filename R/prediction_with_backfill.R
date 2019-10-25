@@ -26,7 +26,7 @@ rRevisedILI_fast <- function(
 
   if(region %in% c('nat', paste0('hhs', 1:10))) {
     flu_data_with_backfill <- cdcfluutils::nat_reg_flu_data_with_backfill
-    historical_vars <- readRDS("./data/historical_vars_regional.RDS")
+    historical_vars <- readRDS("../data/historical_vars_regional.RDS")
     regions <- c(paste0("hhs",1:10),"nat")
     region_idx <- which(regions==region)
   } else if(region %in% c(
