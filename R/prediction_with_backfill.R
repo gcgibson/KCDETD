@@ -60,7 +60,7 @@ simulate_with_backfill <- function(
 {
   library(jsonlite)
   epiweek_idx <- epiweek
-  kcde_preds <- simulate(kcde_fit,newX = newX,newt=newt,nsim=nsim,h=h)
+  kcde_preds <- simulate(kcde_fit,newX = newX,nsim=nsim,h=h)
   if (nchar(epiweek) == 1){
     current_season_epiweek <- paste0(substr(season,6,10),"0",epiweek)
 
