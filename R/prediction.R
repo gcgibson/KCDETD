@@ -25,7 +25,6 @@ simulate.KCDE <- function(
   nsim = 1,
   seed = NULL,
   newX,
-  newt,
   ts_frequency = 52,
   h = 1
 ) {
