@@ -50,7 +50,6 @@ simulate_with_backfill <- function(
   nsim = 1,
   seed = NULL,
   newX,
-  newt,
   ts_frequency = 52,
   h = 1,
   epiweek=40,
