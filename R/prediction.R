@@ -29,6 +29,7 @@ simulate.KCDE <- function(
   ts_frequency = 52,
   h = 1
 ) {
+  library(truncnorm)
   newdata <- newX
   if(is.null(seed)) {
     set.seed(1)
@@ -85,7 +86,7 @@ simulate.KCDE <- function(
   raw_trajectory_samples <- matrix(NA,nrow=nsim,ncol=h)
 
   for (h in 1:4){
-    raw_trajectory_samples[,h] <- rnorm(nsim,mean(kcde_fit[,16 - 4+ h]),1.1*var(kcde_fit[,16 - 4+ h]))
+    raw_trajectory_samples[,h] <- rtruncnorm(nsim,a=0,b=Inf,mean=mean(kcde_fit[,16 - 4+ h]),sd=3*h*var(kcde_fit[,16 - 4+ h]))
   }
 
 

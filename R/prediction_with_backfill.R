@@ -70,15 +70,15 @@ simulate_with_backfill <- function(
 
   }
 
-  req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,1)))
-  nowcast_json <- jsonlite::prettify(rawToChar(req$content))
-  nowcast_obj_1_wk_ahead <- fromJSON(nowcast_json)
-  oneweek_ahead_nowcast <- nowcast_obj_1_wk_ahead$epidata$value
+ # req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,1)))
+ # nowcast_json <- jsonlite::prettify(rawToChar(req$content))
+ # nowcast_obj_1_wk_ahead <- fromJSON(nowcast_json)
+ # oneweek_ahead_nowcast <- nowcast_obj_1_wk_ahead$epidata$value
 
-  req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,2)))
-  nowcast_json <- jsonlite::prettify(rawToChar(req$content))
-  nowcast_obj_2_wk_ahead <- fromJSON(nowcast_json)
-  twoweek_ahead_nowcast <- nowcast_obj_2_wk_ahead$epidata$value
+ # req <- curl::curl_fetch_memory(url=paste0("https://delphi.midas.cs.cmu.edu/epidata/api.php?source=nowcast&locations=",region,"&epiweeks=",move_k_week_ahead(current_season_epiweek,2)))
+ # nowcast_json <- jsonlite::prettify(rawToChar(req$content))
+ ## nowcast_obj_2_wk_ahead <- fromJSON(nowcast_json)
+ # twoweek_ahead_nowcast <- nowcast_obj_2_wk_ahead$epidata$value
 
   #kcde_preds[,1] <- .75*kcde_preds[,1] + .25*oneweek_ahead_nowcast
  # kcde_preds[,2] <- .75*kcde_preds[,2] + .25*twoweek_ahead_nowcast

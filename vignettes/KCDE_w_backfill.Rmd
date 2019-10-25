@@ -21,22 +21,51 @@ library(dplyr)
 #devtools::install_github("https://github.com/reichlab/cdcfluutils",force = T)
 library(KCDETD)
 library(tsfknn)
+library(sarimaTD)
+
+
 state_data <-read.csv("../data/state_data.csv")
-ma_data <- state_data[state_data$region == "Colorado",]
+unique_states <- unique(state_data$region)
+    nsim <- 1000
 
-first_test_index <- 250
-nsim <- 1000
-kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
-                     ma_data$season_week[1:(first_test_index-1)],
-                     52,
-                     h=4)
+fs_mat_kcde <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+fs_mat_sarima <- matrix(NA,nrow=100*length(unique_states),ncol=4)
 
-preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
-                                        h=4,
-                                        epiweek = ma_data$season_week[first_test_index-1],
-                                        season=ma_data$season[first_test_index-1],region="co",seed = 1)
-                                      
 
+ls_index <- 1
+for (state in sample(unique_states,10)){
+  ma_data <- state_data[state_data$region == state,]
+  for (first_test_index in 200:220){
+    kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
+                         ma_data$season_week[1:(first_test_index-1)],
+                         52,
+                         h=4)
+    
+    preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
+                                            h=4,
+                                            epiweek = ma_data$season_week[first_test_index-1],
+                                            season=ma_data$season[first_test_index-1],region="ma",seed = 1)
+    
+    
+    sarima_fit <- fit_sarima(ma_data$unweighted_ili[1:(first_test_index-1)],52,transformation = "box-cox",seasonal_difference = TRUE)
+    
+    sarima_pred <- 
+  simulate(
+    object = sarima_fit,
+    nsim = 1000,
+    seed = 1,
+    newdata = ma_data$unweighted_ili[1:(first_test_index-1)],
+    h = 52
+  )
+    truth <- ma_data[first_test_index:(first_test_index+3),]$unweighted_ili
+    for (h in 1:4){
+      fs_mat_kcde[ls_index,h] <- sum(round(preds[,ncol(preds) -4 + h],2) == round(truth[h],2))/1000
+      fs_mat_sarima[ls_index,h] <- sum(round(sarima_pred[,ncol(sarima_pred) -4 + h],2) == round(truth[h],2))/1000
+    }
+    ls_index <- ls_index+1
+  }
+}  
+#ggplot(data=data.frame(y=c(t(preds)),x=rep(1:ncol(preds),1000),group=rep(1:1000,each=ncol(preds))),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[first_test_index:(first_test_index+3),],aes(x=ncol(preds)-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
 ```
 
 ## Data
