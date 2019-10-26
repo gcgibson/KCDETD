@@ -85,7 +85,7 @@ simulate.KCDE <- function(
   raw_trajectory_samples <- matrix(NA,nrow=nsim,ncol=h)
 
   for (h_itr in 1:h){
-    raw_trajectory_samples[,h_itr] <- rtruncnorm(nsim,a=0,b=Inf,mean=mean(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),sd=3*h*var(kcde_fit[,ncol(kcde_fit) - h+ h_itr]))
+    raw_trajectory_samples[,h_itr] <- rtruncnorm(nsim,a=0,b=Inf,mean=mean(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),sd=3*h_itr*var(kcde_fit[,ncol(kcde_fit) - h+ h_itr]))
   }
 
 

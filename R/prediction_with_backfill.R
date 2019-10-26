@@ -36,8 +36,13 @@ rRevisedILI_fast <- function(
     'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy',
     'as', 'mp', 'dc', 'gu', 'pr', 'vi', 'ord', 'lax', 'jfk')) {
     flu_data_with_backfill <- cdcfluutils::state_local_flu_data_with_backfill
-    historical_vars <- readRDS("data/historical_vars_state.RDS")
-    regions <- c(paste0("hhs",1:10),"nat")
+    historical_vars <- readRDS("../data/historical_vars_state.RDS")
+    regions <- c(
+      'al', 'ak', 'az', 'ar', 'ca', 'co', 'ct', 'de', 'fl', 'ga', 'hi', 'id', 'il',
+      'in', 'ia', 'ks', 'ky', 'la', 'me', 'md', 'ma', 'mi', 'mn', 'ms', 'mo', 'mt',
+      'ne', 'nv', 'nh', 'nj', 'nm', 'ny_minus_jfk', 'nc', 'nd', 'oh', 'ok', 'or',
+      'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy',
+      'as', 'mp', 'dc', 'gu', 'pr', 'vi', 'ord', 'lax', 'jfk')
     region_idx <- which(regions==region)
   } else {
     stop("Invalid region provided to rRevisedILI")
@@ -174,7 +179,7 @@ simulate_with_backfill <- function(
   }
 
 
-  sampled_historical <-rRevisedILI_fast(n = 1000,tail(newX,time_in),region = region,add_nowcast = FALSE,epiweek_idx = epiweek)
+  sampled_historical <-rRevisedILI_fast(n = 1000,tail(newX,time_in),region = region,add_nowcast = FALSE,epiweek_idx = epiweek,season=season)
 
 
 

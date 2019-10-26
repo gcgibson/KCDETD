@@ -38,11 +38,11 @@ for (state in sample(unique_states,10)){
   for (first_test_index in 200:220){
     kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
                          ma_data$season_week[1:(first_test_index-1)],
-                         52,
-                         h=4)
+                         ts_frequency = 52,
+                         h=52,transformation = "none")
     
-    preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],newt = ma_data$season_week[1:(first_test_index-1)],ts_frequency = 52,
-                                            h=4,
+    preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency = 52,
+                                            h=52,
                                             epiweek = ma_data$season_week[first_test_index-1],
                                             season=ma_data$season[first_test_index-1],region="ma",seed = 1)
     
