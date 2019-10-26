@@ -145,7 +145,7 @@ simulate_with_backfill <- function(
   epiweek=40,
   season=2016,
   region="nat",
-  season_start_epiweek = 40
+  season_start_epiweek = 30
 )
 {
   library(jsonlite)
