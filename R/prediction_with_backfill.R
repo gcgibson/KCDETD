@@ -17,7 +17,7 @@ rRevisedILI_fast <- function(
   epiweek_idx,
   region,
   season,
-  season_start_epiweek = 40,
+  season_start_epiweek = 30,
   add_nowcast = FALSE,
   min_value = 0.05,
   return_sampled_id = FALSE) {
