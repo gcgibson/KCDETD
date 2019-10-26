@@ -62,9 +62,12 @@ rRevisedILI_fast <- function(
 
   total_traj <-  matrix(nrow = n, ncol= time_in)
 
+  if (region_idx <= ncol(historical_vars)){
+    total_traj <- matrix(rnorm(n*time_in,tail(observed_inc,time_in),rev(historical_vars[,region_idx][1:time_in])),nrow=n,byrow=TRUE)
+  } else{
+    total_traj <- matrix(rnorm(n*time_in,tail(observed_inc,time_in),rev(rowMeans(historical_vars)[1:time_in])),nrow=n,byrow=TRUE)
 
-  total_traj <- matrix(rnorm(n*time_in,tail(observed_inc,time_in),rev(historical_vars[,region_idx][1:time_in])),nrow=n,byrow=TRUE)
-
+  }
   total_traj[total_traj < min_value] <- min_value
 
   ## add nowcast
