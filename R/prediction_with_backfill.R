@@ -26,7 +26,7 @@ rRevisedILI_fast <- function(
 
   if(region %in% c('nat', paste0('hhs', 1:10))) {
     flu_data_with_backfill <- cdcfluutils::nat_reg_flu_data_with_backfill
-    historical_vars <- readRDS("data/historical_vars_regional.RDS")
+    historical_vars <- readRDS("../data/historical_vars_regional.RDS")
     regions <- c(paste0("hhs",1:10),"nat")
     region_idx <- which(regions==region)
   } else if(region %in% c(
@@ -36,7 +36,7 @@ rRevisedILI_fast <- function(
     'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy',
     'as', 'mp', 'dc', 'gu', 'pr', 'vi', 'ord', 'lax', 'jfk')) {
     flu_data_with_backfill <- cdcfluutils::state_local_flu_data_with_backfill
-    historical_vars <- readRDS("data/historical_vars_state.RDS")
+    historical_vars <- readRDS("../data/historical_vars_state.RDS")
     regions <- c(
       'al', 'ak', 'az', 'ar', 'ca', 'co', 'ct', 'de', 'fl', 'ga', 'hi', 'id', 'il',
       'in', 'ia', 'ks', 'ky', 'la', 'me', 'md', 'ma', 'mi', 'mn', 'ms', 'mo', 'mt',
