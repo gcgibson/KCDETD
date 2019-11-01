@@ -26,7 +26,8 @@ simulate.KCDE <- function(
   seed = NULL,
   newX,
   ts_frequency = 52,
-  h = 1
+  h = 1,
+  seasonal_difference=FALSE
 ) {
   library(truncnorm)
   newdata <- newX
@@ -39,8 +40,8 @@ simulate.KCDE <- function(
 
   if(is.null(object$sarimaTD_call)) {
     transformation <- "none"
-    seasonal_difference <- FALSE
-    ts_frequency <- object$arma[5]
+    seasonal_difference <- seasonal_difference
+    ts_frequency <- ts_frequency
   } else {
     transformation <- object$sarimaTD_used_transformation
     seasonal_difference <-
