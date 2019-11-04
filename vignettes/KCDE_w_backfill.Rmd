@@ -31,23 +31,24 @@ unique_states <- unique(state_data$region)
 fs_mat_kcde <- matrix(NA,nrow=100*length(unique_states),ncol=4)
 fs_mat_sarima <- matrix(NA,nrow=100*length(unique_states),ncol=4)
 
+mse_mat_kcde <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+mse_mat_sarima <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+
 
 ls_index <- 1
 for (state in sample(unique_states,10)){
   ma_data <- state_data[state_data$region == state,]
   for (first_test_index in 200:220){
-    kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
-                         ma_data$season_week[1:(first_test_index-1)],
+    kcde_fit <- fit_kcde(tail(ma_data$unweighted_ili[1:(first_test_index-1)],100),
+                         
                          ts_frequency = 52,
-                         h=52,transformation = "box-cox")
+                         h=52,transformation = "none")
     
-    preds <- simulate_with_backfill(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency = 52,
-                                            h=52,
-                                            epiweek = ma_data$season_week[first_test_index-1],
-                                            season=ma_data$season[first_test_index-1],region="ma",seed = 1)
+    preds <- simulate.KCDE(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency = 52,
+                                            h=4,seed = 1,seasonal_difference = F)
     
     
-    sarima_fit <- fit_sarima(ma_data$unweighted_ili[1:(first_test_index-1)],52,transformation = "box-cox",seasonal_difference = TRUE)
+    sarima_fit <- fit_sarima(tail(ma_data$unweighted_ili[1:(first_test_index-1)],100),52,transformation = "box-cox",seasonal_difference = TRUE)
     
     sarima_pred <- 
   simulate(
@@ -55,12 +56,15 @@ for (state in sample(unique_states,10)){
     nsim = 1000,
     seed = 1,
     newdata = ma_data$unweighted_ili[1:(first_test_index-1)],
-    h = 52
+    h = 4
   )
     truth <- ma_data[first_test_index:(first_test_index+3),]$unweighted_ili
     for (h in 1:4){
       fs_mat_kcde[ls_index,h] <- sum(round(preds[,ncol(preds) -4 + h],2) == round(truth[h],2))/1000
       fs_mat_sarima[ls_index,h] <- sum(round(sarima_pred[,ncol(sarima_pred) -4 + h],2) == round(truth[h],2))/1000
+      mse_mat_kcde[ls_index,h] <- (mean(preds[,ncol(preds)-4+h],na.rm=T) - truth[h])^2
+      mse_mat_sarima[ls_index,h] <- (mean(sarima_pred[,ncol(preds)-4+h],na.rm=T) - truth[h])^2
+
     }
     ls_index <- ls_index+1
   }
@@ -69,64 +73,6 @@ for (state in sample(unique_states,10)){
 
 exp(mean(pmax(-10,log(fs_mat_sarima)),na.rm=T))
 exp(mean(pmax(-10,log(fs_mat_kcde)),na.rm=T))
-```
-
-## Data
-
-To begin we look at a classic infectious disease time series data set: influenza-like-illness as reported by the CDC in Colorado. 
-
-
-
-```{r}
-library(devtools)
-library(dplyr)
-library(KCDETD)
-library(jsonlite)
-library(ggplot2)
-state_data <-read.csv("../data/state_data.csv")
-co_data <- state_data[state_data$region == "Colorado",]
-ggplot(co_data,aes(x=week_start,y=unweighted_ili,group=1)) + geom_line()
-```
-
-
-We then fit the KCDE model to the available data using the `fit_kcde` method after choosing an evaluation point. 
-
-
-```{r, results='hide',echo=FALSE}
-  nsim <- 1000
-
-kcde_fit <- fit_kcde(co_data$unweighted_ili[1:(first_test_index-1)],co_data$season_week[1:(first_test_index-1)],52,h=4)
-```
-
-
-```{r,eval=FALSE}
-nsim <- 1000
-
-kcde_fit <- fit_kcde(co_data$unweighted_ili[1:(first_test_index-1)],
-                     co_data$season_week[1:(first_test_index-1)],
-                     52,
-                     h=4)
-```
-
-
-Finally we generate predictions using the fitted model on the same data used to train the model. 
-
-```{r}
-preds <- simulate_with_backfill(kcde_fit,
-                                nsim,
-                                newX = co_data$unweighted_ili[1:(first_test_index-1)],
-                                newt = co_data$season_week[1:(first_test_index-1)],
-                                ts_frequency = 52,
-                                h=4,
-                                epiweek = co_data$season_week[first_test_index-1],
-                                season=co_data$season[first_test_index-1],
-                                region="co")
-                                      
-
-```
-
-Finally, we plot the results
-```{r}
-library(ggplot2)
-ggplot(data=data.frame(y=c(t(preds)),x=rep(1:ncol(preds),1000),group=rep(1:1000,each=ncol(preds))),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[first_test_index:(first_test_index+3),],aes(x=ncol(preds)-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
+mean(mse_mat_kcde,na.rm=T)
+mean(mse_mat_sarima,na.rm=T)
 ```

@@ -1,0 +1,104 @@
+---
+title: "705 Homework 7"
+author: "Graham"
+date: "November 3, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# 1
+
+Writing 
+
+$$S = DRD$$
+
+We can use the definition of $D$ and $R$ to see 
+
+$$S = \begin{pmatrix} s_y & 0' \\ 0 &  D_x \end{pmatrix}\begin{pmatrix} 1 & r'_{yx} \\ r_{yx} &  R_{xx} \end{pmatrix}\begin{pmatrix} s_y & 0' \\ 0 &  D_x \end{pmatrix}$$
+
+$$S = \begin{pmatrix} s_y & s_yr'_{yx} \\ D_xr_{yx} &  D_xR_{xx} \end{pmatrix}\begin{pmatrix} s_y & 0' \\ 0 &  D_x \end{pmatrix}$$
+$$S = \begin{pmatrix} s_y^2 &  s_yr'_{yx}D_x \\ s_yD_xr_{yx} &  D_xR_{xx}D_x \end{pmatrix}$$
+
+
+
+
+# 2 
+
+# a 
+
+We have $n-1$ choices for the first bootstrap sample out of a total of $n$ choices. This gives us 
+
+$$\frac{n-1}{n} = 1 - 1/n$$
+
+
+# b
+
+By symmetry, the same as part a.
+
+# c
+
+Each bootstrap sample is drawn independently so this probability is 
+
+$$(1-1/n)^n$$
+
+
+# d 
+```{r}
+n <- 5
+((1/n))^n
+```
+# e
+```{r}
+n <- 100
+((1/n))^n
+```
+
+
+# f 
+```{r}
+n <- 100000
+((1/n))^n
+```
+
+# g
+```{r}
+prob_jth = function(n){ (1/n)^n }
+x = 1:10000
+y = sapply(x,prob_jth)
+plot(x,y,type='l')
+
+```
+
+# h
+
+```{r}
+store=rep(NA,10000)
+for(i in 1:10000){
+  store[i]=sum(sample(1:100,rep=TRUE)==4)>0
+}
+
+mean(store)
+```
+
+
+This means that on average, there is a 64 percent probability that the j-th observation is in the bootstrap sample.
+
+
+# 3
+
+We repeatedly sample from the original dataset to obtain an estimate of the model parameters, $\theta$. We then compute 
+
+$$\hat{y}^{(i)} \sim f(Y|X,\theta^{(i)})$$
+
+This gives us an empirical distribution we can take the sample variance of 
+
+
+$$Var(\hat{y}) = \frac{1}{n-1}\sum_{i}(\hat{y}^{(i)} - \bar{\hat{y}})^2$$
+
+
+
+
+
+

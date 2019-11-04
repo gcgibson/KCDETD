@@ -1,4 +1,7 @@
-
+rbf <- function(x, y, sigma = 1)
+{
+  exp(- sigma * (x - y) ^ 2)
+}
 #' Simulate predictive trajectories from a KCDE model with class KCDE
 #'
 #' This function does a few things worth noting.  It linearly interpolates
@@ -86,7 +89,18 @@ simulate.KCDE <- function(
   raw_trajectory_samples <- matrix(NA,nrow=nsim,ncol=h)
 
   for (h_itr in 1:h){
-    raw_trajectory_samples[,h_itr] <- rtruncnorm(nsim,a=0,b=Inf,mean=mean(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),sd=3*var(kcde_fit[,ncol(kcde_fit) - h+ h_itr]))
+    #raw_trajectory_samples[,h_itr] <- rtruncnorm(nsim,a=0,b=max(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),mean=mean(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),sd=var(kcde_fit[,ncol(kcde_fit) - h+ h_itr]))
+    kcde_samples <- kcde_fit[,ncol(kcde_fit) - h+ h_itr]
+    tmp_traj_samples <- rep(NA,nsim)
+
+    X_to_sim<- kcde_fit[,1:(ncol(kcde_fit) - h)]
+    similarities <- rowSums(rbf(X_to_sim,c(interpolated_y),sigma = 1))
+    similarities <- similarities/(sum(similarities))
+    for (samp_idx in 1:nsim){
+      obs_to_sample <- sample(kcde_samples,1,prob =similarities )
+      tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.05)
+    }
+    raw_trajectory_samples[,h_itr] <- .9*tmp_traj_samples + .1*runif(nsim,0,100)
   }
 
 
@@ -125,5 +139,56 @@ simulate.KCDE <- function(
 
 
 ## TEST
+library(sarimaTD)
 
-#sims <-simulate(fit,newdata = 1:10,nsim=100)
+state_data <-read.csv("data/state_data.csv")
+unique_states <- unique(state_data$region)
+nsim <- 10000
+
+fs_mat_kcde <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+fs_mat_sarima <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+
+mse_mat_kcde <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+mse_mat_sarima <- matrix(NA,nrow=100*length(unique_states),ncol=4)
+
+
+ls_index <- 1
+for (state in sample(unique_states,10)){
+  ma_data <- state_data[state_data$region == state,]
+  for (first_test_index in 200:220){
+    kcde_fit <- fit_kcde(ma_data$unweighted_ili[1:(first_test_index-1)],
+
+                         ts_frequency = 52,
+                         h=4,transformation = "none")
+
+    preds <- simulate.KCDE(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency = 52,
+                           h=4,seed = 1,seasonal_difference = F)
+
+
+    sarima_fit <- fit_sarima(tail(ma_data$unweighted_ili[1:(first_test_index-1)],100),52,transformation = "box-cox",seasonal_difference = TRUE)
+
+    sarima_pred <-
+      simulate(
+        object = sarima_fit,
+        nsim = 1000,
+        seed = 1,
+        newdata = ma_data$unweighted_ili[1:(first_test_index-1)],
+        h = 4
+      )
+    truth <- ma_data$unweighted_ili[first_test_index:(first_test_index+3)]
+    for (h in 1:4){
+      fs_mat_kcde[ls_index,h] <- sum(round(preds[,ncol(preds) -4 + h],2) == round(truth[h],2))/1000
+      fs_mat_sarima[ls_index,h] <- sum(round(sarima_pred[,ncol(sarima_pred) -4 + h],2) == round(truth[h],2))/1000
+      mse_mat_kcde[ls_index,h] <- (mean(preds[,ncol(preds)-4+h],na.rm=T) - truth[h])^2
+      mse_mat_sarima[ls_index,h] <- (mean(sarima_pred[,ncol(preds)-4+h],na.rm=T) - truth[h])^2
+
+    }
+    ls_index <- ls_index+1
+  }
+}
+#ggplot(data=data.frame(y=c(t(preds)),x=rep(1:ncol(preds),1000),group=rep(1:1000,each=ncol(preds))),aes(x=x,y=y,group=group)) + geom_line() + geom_line(data=ma_data[first_test_index:(first_test_index+3),],aes(x=ncol(preds)-4+ 1:4,y=unweighted_ili,group=1,col='truth'))
+
+exp(mean(pmax(-10,log(fs_mat_sarima)),na.rm=T))
+exp(mean(pmax(-10,log(fs_mat_kcde)),na.rm=T))
+mean(mse_mat_kcde,na.rm=T)
+mean(mse_mat_sarima,na.rm=T)
