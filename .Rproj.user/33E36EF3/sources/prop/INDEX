@@ -6,5 +6,7 @@
 ~%2FKCDETD%2FR%2Fprediction.R="1F723947"
 ~%2FKCDETD%2FR%2Fprediction_with_backfill.R="FDAFBEFE"
 ~%2FKCDETD%2FR%2Fsample_historical_variances.R="38ADED0E"
+~%2FKCDETD%2FR%2Futils.R="9BF0E0BC"
+~%2FKCDETD%2Fvignettes%2F705_hmwrk_6.Rmd="62F26B37"
 ~%2FKCDETD%2Fvignettes%2FKCDE.Rmd="9EDC349"
 ~%2FKCDETD%2Fvignettes%2FKCDE_w_backfill.Rmd="D0F2835A"

@@ -1168,11 +1168,12 @@ invert_bc_transform <- function(b, lambda, gamma) {
 #'
 #' @export
 do_seasonal_difference <- function(y, ts_frequency) {
-  differenced_y <- ts(c(rep(NA, ts_frequency),
-                        y[seq(from = ts_frequency + 1, to = length(y))] -
-                          y[seq(from = 1, to = length(y) - ts_frequency)]),
-                      frequency = ts_frequency)
-  return(differenced_y)
+  #differenced_y <- ts(c(rep(NA, ts_frequency),
+   #                     y[seq(from = ts_frequency + 1, to = length(y))] -
+    #                      y[seq(from = 1, to = length(y) - ts_frequency)]),
+    #                  frequency = ts_frequency)
+
+  return(c(NA,diff(y)))
 }
 
 #' Invert first-order seasonal differencing (go from seasonally differenced time
@@ -1193,8 +1194,7 @@ do_seasonal_difference <- function(y, ts_frequency) {
 #'
 #' @export
 invert_seasonal_difference <- function(dy, y, ts_frequency) {
-  return(ts(dy + y[length(y) + seq_along(dy) - ts_frequency],
-            freq = ts_frequency))
+  return(c(y,y+cumsum(dy)))
 }
 
 #' Remove leading values that are infinite or missing, and replace all internal
