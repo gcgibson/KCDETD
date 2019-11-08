@@ -106,7 +106,7 @@ simulate.KCDE <- function(
      } else if (tail(epiweeks,1) <= 10 ){
        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.05)
      } else if (tail(epiweeks,1) > 10 & tail(epiweeks,1) <= 20 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
+       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.001)
      }
     }
     raw_trajectory_samples[,h_itr] <- .9*tmp_traj_samples + .1*runif(nsim,0,100)
