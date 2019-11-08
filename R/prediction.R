@@ -100,13 +100,13 @@ simulate.KCDE <- function(
     for (samp_idx in 1:nsim){
       obs_to_sample <- sample(kcde_samples,1,prob =similarities )
      if (tail(epiweeks,1) >= 40 & tail(epiweeks,1) <= 50 ){
-        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
+        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.005)
      } else if (tail(epiweeks,1) >= 50 & tail(epiweeks,1) <= 52 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.05)
+       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
      } else if (tail(epiweeks,1) <= 10 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.05)
+       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
      } else if (tail(epiweeks,1) > 10 & tail(epiweeks,1) <= 20 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.001)
+       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.005)
      }
     }
     raw_trajectory_samples[,h_itr] <- .9*tmp_traj_samples + .1*runif(nsim,0,100)
