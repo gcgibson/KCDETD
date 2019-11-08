@@ -109,7 +109,7 @@ simulate.KCDE <- function(
        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=0.00000000001)
      }
     }
-    raw_trajectory_samples[,h_itr] <- .9*tmp_traj_samples + .1*runif(nsim,0,100)
+    raw_trajectory_samples[,h_itr] <- .99*tmp_traj_samples + .01*runif(nsim,0,100)
   }
 
 
