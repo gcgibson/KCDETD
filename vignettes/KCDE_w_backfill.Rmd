@@ -45,7 +45,8 @@ for (state in sample(unique_states,10)){
                          h=52,transformation = "none")
     
     preds <- simulate.KCDE(kcde_fit,nsim,newX = ma_data$unweighted_ili[1:(first_test_index-1)],ts_frequency = 52,
-                                            h=4,seed = 1,seasonal_difference = F)
+                                            h=4,seed = 1,seasonal_difference = F,epiweek=ma_data$season_week[1:(first_test_index-1)])
+    
     
     
     sarima_fit <- fit_sarima(tail(ma_data$unweighted_ili[1:(first_test_index-1)],100),52,transformation = "box-cox",seasonal_difference = TRUE)
@@ -58,6 +59,8 @@ for (state in sample(unique_states,10)){
     newdata = ma_data$unweighted_ili[1:(first_test_index-1)],
     h = 4
   )
+    
+    
     truth <- ma_data[first_test_index:(first_test_index+3),]$unweighted_ili
     for (h in 1:4){
       fs_mat_kcde[ls_index,h] <- sum(round(preds[,ncol(preds) -4 + h],2) == round(truth[h],2))/1000
