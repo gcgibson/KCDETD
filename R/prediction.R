@@ -115,7 +115,7 @@ simulate.KCDE <- function(
   ### smooth the trajectories
   for ( i in 1:nrow(raw_trajectory_samples)){
     y <- raw_trajectory_samples[i,]
-    loes_fit <- loess(y~x, data=data.frame(y=y,x=1:length(y)),span=.05)
+    loes_fit <- loess(y~x, data=data.frame(y=y,x=1:length(y)),span=.1)
     raw_trajectory_samples[i,] <- predict(loes_fit)
   }
 
