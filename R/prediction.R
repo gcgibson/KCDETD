@@ -112,6 +112,12 @@ simulate.KCDE <- function(
     raw_trajectory_samples[,h_itr] <- .99*tmp_traj_samples + .01*runif(nsim,0,100)
   }
 
+  ### smooth the trajectories
+  for ( i in 1:nrow(raw_trajectory_samples)){
+    y <- raw_trajectory_samples[i,]
+    loes_fit <- loess(y~., data=data.frame(y=y),n=.05)
+    raw_trajectory_samples[i,] <- predict(loes_fit)
+  }
 
   ## Sampled trajectories are of seasonally differenced transformed time series
   ## Get to trajectories for originally observed time series ("orig") by
