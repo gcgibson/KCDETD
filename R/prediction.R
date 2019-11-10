@@ -116,7 +116,7 @@ simulate.KCDE <- function(
   for ( i in 1:nrow(raw_trajectory_samples)){
     y <- raw_trajectory_samples[i,]
     loes_fit <- loess(y~x, data=data.frame(y=y,x=1:length(y)),span=.5)
-    raw_trajectory_samples[i,] <- predict(loes_fit)
+    raw_trajectory_samples[i,] <- pmax(predict(loes_fit),0)
   }
 
   ## Sampled trajectories are of seasonally differenced transformed time series
