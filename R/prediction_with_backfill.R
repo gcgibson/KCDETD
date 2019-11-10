@@ -150,13 +150,14 @@ simulate_with_backfill <- function(
   season=2016,
   region="nat",
   season_start_epiweek = 30,
-  seasonal_difference=FALSE
+  seasonal_difference=FALSE,
+  bandwidth = 1
 )
 {
   library(jsonlite)
   library(cdcfluutils)
   epiweek_idx <- epiweek
-  kcde_preds <- simulate(kcde_fit,seed,newX=newX,epiweeks=epiweeks,nsim=nsim,h=h,seasonal_difference = seasonal_difference)
+  kcde_preds <- simulate(kcde_fit,seed,newX=newX,epiweeks=epiweeks,nsim=nsim,h=h,seasonal_difference = seasonal_difference,bandwidth)
   if (nchar(epiweek) == 1){
     current_season_epiweek <- paste0(substr(season,6,10),"0",epiweek)
 

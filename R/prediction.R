@@ -1,7 +1,4 @@
-rbf <- function(x, y, sigma = 1)
-{
-  exp(- sigma * (x - y) ^ 2)
-}
+
 #' Simulate predictive trajectories from a KCDE model with class KCDE
 #'
 #' This function does a few things worth noting.  It linearly interpolates
@@ -31,9 +28,14 @@ simulate.KCDE <- function(
   epiweeks,
   ts_frequency = 52,
   h = 1,
-  seasonal_difference=FALSE
+  seasonal_difference=FALSE,
+  bandwidth = 1
 ) {
   library(truncnorm)
+  rbf <- function(x, y, sigma = bandwidth)
+  {
+    exp(- sigma * (x - y) ^ 2)
+  }
   newdata <- newX
   if(is.null(seed)) {
     set.seed(1)
