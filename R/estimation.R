@@ -27,6 +27,7 @@ fit_kcde <- function(
   transformation = "none",
   bc_gamma = 0.5,
   seasonal_difference = FALSE,
+  num_nn,
   h=4,
   d = NA,
   D = NA) {
@@ -67,7 +68,12 @@ fit_kcde <- function(
   }
   kcde_fit <- list()
   ## Get KCDE fit
-  pred <- knn_forecasting(differenced_y, h = h, lags = 1:6, k = 20)
+  if (seasonal_difference){
+    lag_set <- c(1:6,52)
+  } else {
+    lag_set <- 1:6
+  }
+  pred <- knn_forecasting(differenced_y, h = h, lags =lag_set, k = num_nn)
   kcde_fit[[1]] <- nearest_neighbors(pred)
   kcde_fit$kcde_call <- match.call()
   for(param_name in c("y", "ts_frequency", "transformation", "seasonal_difference", "d", "D")) {
