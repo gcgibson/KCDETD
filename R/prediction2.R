@@ -20,98 +20,75 @@
 #' @return an nsim by h matrix with simulated values
 #'
 #' @export
-simulate.KCDE <- function(
+simulate.KCDE2 <- function(
   object,
   nsim = 1,
   seed = NULL,
   newX,
-  epiweeks,
   ts_frequency = 52,
-  h = 1,
-  seasonal_difference=FALSE,
-  bandwidth = 1
+  h = 1
 ) {
   library(truncnorm)
   rbf <- function(x, y, sigma = bandwidth)
   {
     exp(- sigma * (x - y) ^ 2)
   }
+
   newdata <- newX
-  if(is.null(seed)) {
-    set.seed(1)
-    seed <- .Random.seed
-  } else {
-    set.seed(seed)
-  }
 
-  if(is.null(object$sarimaTD_call)) {
-    transformation <- "none"
-    seasonal_difference <- seasonal_difference
-    ts_frequency <- ts_frequency
-  } else {
-    transformation <- object$sarimaTD_used_transformation
-    seasonal_difference <-
-      object$sarimaTD_used_seasonal_difference
-    ts_frequency <- object$arma[5]
-  }
+  kcde_fit <-knn_forecasting(newX,h=h,lags=1:6,k=20)
+  kcde_fit <- nearest_neighbors(kcde_fit)$nneighbors
 
-  ## Update SARIMA fit object with transformed and seasonally differenced data
-  ## Initial transformation, if necessary
-  if(identical(transformation, "box-cox")) {
-    est_bc_params <- object$KCDE_est_bc_params
-  } else {
-    est_bc_params <- NULL
-  }
-  transformed_y <- do_initial_transform(
-    y = newdata,
-    transformation = transformation,
-    bc_params = est_bc_params)
-
-  ## Initial seasonal differencing, if necessary
-  if(seasonal_difference) {
-    differenced_y <- do_seasonal_difference(
-      y = transformed_y,
-      ts_frequency = ts_frequency)
-  } else {
-    differenced_y <- ts(transformed_y, frequency = 52)
-  }
-
-  ## Drop leading missing values, fill in internal missing values via linear
-  ## interpolation.  This is necessary to ensure non-missing predictions if the
-  ## sarima model has a moving average component.
-  ## deal with internal missing or infinite values in y that can
-  ## result in simulated trajectories of all NAs if the model has a moving
-  ## average component.  Here we do this by linear interpolation.
-  ##
-  ## Another (better?) solution would be to write a version of stats::filter
-  ## that does the "right thing" with NAs if filter coefficients are 0 and then
-  ## use that function in forecast:::myarima.sim
-  interpolated_y <- interpolate_and_clean_missing(differenced_y)
-
-  kcde_fit <- object[[1]]$nneighbors
   raw_trajectory_samples <- matrix(NA,nrow=nsim,ncol=h)
 
   for (h_itr in 1:h){
     #raw_trajectory_samples[,h_itr] <- rtruncnorm(nsim,a=0,b=max(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),mean=mean(kcde_fit[,ncol(kcde_fit) - h+ h_itr]),sd=var(kcde_fit[,ncol(kcde_fit) - h+ h_itr]))
     kcde_samples <- kcde_fit[,ncol(kcde_fit) - h+ h_itr]
-    tmp_traj_samples <- rep(NA,nsim)
-
-    X_to_sim<- kcde_fit[,1:(ncol(kcde_fit) - h)]
-    similarities <- rowSums(rbf(X_to_sim,c(interpolated_y),sigma = 1))
-    similarities <- similarities/(sum(similarities))
-    for (samp_idx in 1:nsim){
-      obs_to_sample <- sample(kcde_samples,1,prob =similarities )
-     if (tail(epiweeks,1) >= 40 & tail(epiweeks,1) <= 50 ){
-        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.005)
-     } else if (tail(epiweeks,1) >= 50 & tail(epiweeks,1) <= 52 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
-     } else if (tail(epiweeks,1) <= 10 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.01)
-     } else if (tail(epiweeks,1) > 10 & tail(epiweeks,1) <= 20 ){
-       tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=0.00000000001)
-     }
+    errors <- matrix(NA,nrow=1000,ncol=3)
+    err_idx <- 1
+    for (bandwith1 in c(.1,1,10)){
+      for (bandwith2 in c(.1,1,10)){
+        for (sample_idx in 1:length(kcde_samples)){
+          kcde_samples_without <- kcde_samples[-sample_idx]
+          loo_truth <- kcde_samples[sample_idx]
+          X_to_sim<- kcde_fit[,1:(ncol(kcde_fit) - h)]
+          similarities <- rowSums(rbf(X_to_sim,c(newX),sigma = bandwith1))
+          similarities <- similarities/(sum(similarities))
+          tmp_traj_samples <- rep(NA,nsim)
+          for (samp_idx in 1:nsim){
+            obs_to_sample <- sample(kcde_samples,1,prob =similarities )
+            tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=bandwith2)
+          }
+          ls <- sum(loo_truth <= tmp_traj_samples +.5 & loo_truth>= tmp_traj_samples-.5)/1000
+          errors[err_idx,] <-c(log(ls),bandwith1,bandwith2)
+          err_idx <- err_idx + 1
+        }
+      }
     }
-    raw_trajectory_samples[,h_itr] <- .9*tmp_traj_samples + .1*runif(nsim,0,100)
+    errors <- as.data.frame(errors)
+    colnames(errors) <- c("ls","bw1","bw2")
+    avg_ls <-errors %>% dplyr::group_by(bw1,bw2) %>% summarize(mls=mean(ls,na.rm=T))
+    bw1_optim <- avg_ls[avg_ls$mls ==max(avg_ls$mls,na.rm=T),]$bw1[1]
+    bw2_optim <- avg_ls[avg_ls$mls ==max(avg_ls$mls,na.rm=T),]$bw2[1]
+
+
+    for (sample_idx in 1:length(kcde_samples)){
+      kcde_samples_without <- kcde_samples[-sample_idx]
+      loo_truth <- kcde_samples[sample_idx]
+      X_to_sim<- kcde_fit[,1:(ncol(kcde_fit) - h)]
+      similarities <- rowSums(rbf(X_to_sim,c(newX),sigma = bw1_optim))
+      similarities <- similarities/(sum(similarities))
+      tmp_traj_samples <- rep(NA,nsim)
+      for (samp_idx in 1:nsim){
+        obs_to_sample <- sample(kcde_samples,1,prob =similarities )
+        tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=bw2_optim)
+      }
+      ls <- sum(loo_truth <= tmp_traj_samples +.5 & loo_truth>= tmp_traj_samples-.5)/1000
+      errors[err_idx,] <-c(log(ls),bandwith1,bandwith2)
+      err_idx <- err_idx + 1
+    }
+
+    raw_trajectory_samples[,h_itr] <- .99*tmp_traj_samples + .01*runif(nsim,0,100)
   }
 
   ### smooth the trajectories
@@ -120,37 +97,7 @@ simulate.KCDE <- function(
     loes_fit <- loess(y~x, data=data.frame(y=y,x=1:length(y)),span=.4)
     raw_trajectory_samples[i,] <- pmax(predict(loes_fit),0)
   }
-
-  ## Sampled trajectories are of seasonally differenced transformed time series
-  ## Get to trajectories for originally observed time series ("orig") by
-  ## adding seasonal lag of incidence and inverting the transformation
-  orig_trajectory_samples <- raw_trajectory_samples
-  if(seasonal_difference) {
-    for(i in seq_len(nsim)) {
-      orig_trajectory_samples[i, ] <-
-        invert_seasonal_difference(
-          dy = raw_trajectory_samples[i, ],
-          y = transformed_y,
-          ts_frequency = ts_frequency)
-      orig_trajectory_samples[i, ] <-
-        invert_initial_transform(
-          y = orig_trajectory_samples[i, ],
-          transformation = transformation,
-          bc_params = est_bc_params)
-    }
-  } else {
-    for(i in seq_len(nsim)) {
-      orig_trajectory_samples[i, ] <-
-        invert_initial_transform(
-          y = raw_trajectory_samples[i, ],
-          transformation = transformation,
-          bc_params = est_bc_params)
-    }
-  }
-
-  #attr(orig_trajectory_samples, "seed") <- seed
-
-  return(orig_trajectory_samples)
+  return(raw_trajectory_samples)
 }
 
 
