@@ -59,7 +59,7 @@ fit_kcde <- function(
     bc_params = est_bc_params)
 
   ## Initial seasonal differencing, if necessary
-  if(seasonal_difference) {
+  if(TRUE) {
     differenced_y <- do_seasonal_difference(
       y = transformed_y,
       ts_frequency = ts_frequency)
