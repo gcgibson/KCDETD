@@ -101,7 +101,7 @@ simulate.KCDE <- function(
     similarities <- similarities/(sum(similarities))
     for (samp_idx in 1:nsim){
       obs_to_sample <- sample(kcde_samples,1,prob =similarities )
-      tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=.1)
+      tmp_traj_samples[samp_idx] <- rnorm(1,mean = obs_to_sample,sd=1)
     }
     raw_trajectory_samples[,h_itr] <- tmp_traj_samples
   }
