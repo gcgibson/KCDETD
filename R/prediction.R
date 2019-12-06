@@ -46,7 +46,7 @@ simulate.KCDE <- function(
 
   if(is.null(object$sarimaTD_call)) {
     transformation <- "none"
-    seasonal_difference <- TRUE
+    seasonal_difference <- FALSE
     ts_frequency <- ts_frequency
   } else {
     transformation <- object$sarimaTD_used_transformation
