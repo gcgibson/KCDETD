@@ -185,7 +185,7 @@ simulate_with_backfill <- function(
   }
 
 
-  sampled_historical <-rRevisedILI_fast(n = 1000,tail(newX,time_in),region = region,add_nowcast = FALSE,epiweek_idx = epiweek,season=season)
+  sampled_historical <-rRevisedILI_fast(n = 1000,tail(newX,time_in),region = region,add_nowcast = FALSE,epiweek_idx = as.numeric(epiweek),season=season)
 
 
 
