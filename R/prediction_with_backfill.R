@@ -179,7 +179,7 @@ simulate_with_backfill <- function(
   kcde_preds[,2] <- .5*kcde_preds[,2] + .5*twoweek_ahead_nowcast
 
   if (epiweek_idx <= 20){
-    time_in <- as.numeric(cdcfluutils::get_num_MMWR_weeks_in_first_season_year(season)) - season_start_epiweek + epiweek_idx
+    time_in <- as.numeric(cdcfluutils::get_num_MMWR_weeks_in_first_season_year(season)) - season_start_epiweek + as.numeric(epiweek_idx)
   } else{
     time_in <- epiweek_idx - season_start_epiweek + 1
   }
